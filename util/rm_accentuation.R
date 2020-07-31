@@ -1,12 +1,14 @@
-rm_accentuation <- function(str,pattern="all") {
-  # Remove todos os acentos e pontuaÃ§Ãµes de um vetor de strings.
-  # ParÃ¢metros:
-  #   str - vetor de strings que terÃ£o seus acentos retirados.
-  #   patterns - vetor de strings acentos que serÃ£o retirados.
-  #            Exemplo: pattern = c("Â´", "^") retirarÃ¡ os acentos agudos e circunflexos apenas.
-  #            Palavras aceitas: "all" - retira todos os acentos, mais "Â´", "`", "^", "~", "Â¨", "Ã§".
+rm_accent <- function(str,pattern="all") {
+  # rm_accent - REMOVE ACENTOS DE PALAVRAS
+  # Função que tira todos os acentos e pontuações de um vetor de strings.
+  # Parâmetros:
+  # str - vetor de strings que terão seus acentos retirados.
+  # patterns - vetor de strings com um ou mais elementos indicando quais acentos deverão ser retirados.
+  #            Para indicar quais acentos deverão ser retirados, um vetor com os símbolos deverão ser passados.
+  #            Exemplo: pattern = c("´", "^") retirará os acentos agudos e circunflexos apenas.
+  #            Outras palavras aceitas: "all" (retira todos os acentos, que são "´", "`", "^", "~", "¨", "ç")
   
-  # Verifica se o parÃ¢metro str Ã© nÃ£o uma string e converte o valor para o tipo string
+  # Verifica se o parâmetro str é não uma string e converte o valor para o tipo string
   if(!is.character(str)){}
       str <- as.character(str)
   }
@@ -14,20 +16,18 @@ rm_accentuation <- function(str,pattern="all") {
   # Remove os acentos duplicados 
   pattern <- unique(pattern)
   
-  if(any(pattern=="Ã‡"))
-    pattern[pattern=="Ã‡"] <- "Ã§"
+  if(any(pattern=="Ç"))
+    pattern[pattern=="Ç"] <- "ç"
   
-  # sÃ­mbolos acentuados
   symbols <- c(
-    acute = "Ã¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“ÃšÃ½Ã",
-    grave = "Ã Ã¨Ã¬Ã²Ã¹Ã€ÃˆÃŒÃ’Ã™",
-    circunflex = "Ã¢ÃªÃ®Ã´Ã»Ã‚ÃŠÃŽÃ”Ã›",
-    tilde = "Ã£ÃµÃƒÃ•Ã±Ã‘",
-    umlaut = "Ã¤Ã«Ã¯Ã¶Ã¼Ã„Ã‹ÃÃ–ÃœÃ¿",
-    cedil = "Ã§Ã‡"
+    acute = "áéíóúÁÉÍÓÚýÝ",
+    grave = "àèìòùÀÈÌÒÙ",
+    circunflex = "âêîôûÂÊÎÔÛ",
+    tilde = "ãõÃÕñÑ",
+    umlaut = "äëïöüÄËÏÖÜÿ",
+    cedil = "çÇ"
   )
   
-  # sÃ­mbolos sem acentuaÃ§Ã£o
   nudeSymbols <- c(
     acute = "aeiouAEIOUyY",
     grave = "aeiouAEIOU",
@@ -37,17 +37,15 @@ rm_accentuation <- function(str,pattern="all") {
     cedil = "cC"
   )
   
-  # Define tipos de acentos que poderÃ£o ser removidos
-  accentTypes <- c("Â´","`","^","~","Â¨","Ã§")
+  accentTypes <- c("´","`","^","~","¨","ç")
   
-  # Verifica se tem a ocorrÃªncia do pattern "all" e substitui todos os caracteres acentuados
+  # Verifica se tem a ocorrência de "all" ou "todos" entre os padrões e substitui todos os caracteres acentuados
   if(any(c("all","todos")%in%pattern)) 
     return(chartr(paste(symbols, collapse=""), paste(nudeSymbols, collapse=""), str))
   
-  # Substitui todos elementos acentuados com os sÃ­mbolos contidos no vetor pattern
+  # Substitui todos elementos acentuados com os símbolos contidos no vetor de padrões
   for(i in which(accentTypes%in%pattern)){
     str <- chartr(symbols[i],nudeSymbols[i], str)
   
-  # Retorna str com acentuaÃ§Ã£o removida
   return(str)
 }
